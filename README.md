@@ -4,17 +4,14 @@
 
     -Run pip install pygame
 
-    -No external servers needed - all features are localhost-only
+    -No external servers needed
+    - all features are localhost-only
 
 2.Game Process:
 
-    -Players navigate through cybersecurity lessons
+    -Players navigate through space with rocket dodging meteors
 
-    -Right arrow key progresses through lessons
-
-    -Demonstrates security concepts in a controlled environment
-
-    -Creates visible educational artifacts, not hidden malware
+    -Use arrow keys to move around
 
 3.Security Features:
 
@@ -40,13 +37,8 @@
 
 5.Innovative Features:
 
-    -Interactive learning experience
-
-    -Real-time concept demonstration
-
     -Built-in ethical safeguards
 
     -Immediate cleanup tool generation
 
     -Localhost-only safe demonstration
-
