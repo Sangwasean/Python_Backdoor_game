@@ -6,19 +6,21 @@ import threading
 import winreg as reg
 import random
 import pygame
+import tkinter as tk
+from tkinter import messagebox
 from pygame.locals import *
 
-# ----- Cybersecurity Features Section -----
-print("\n" + "=" * 50)
-print("WARNING: EDUCATIONAL PURPOSES ONLY")
-print("This game demonstrates cybersecurity concepts.")
-print("It will:")
-print("- Check for required software")
-print("- Simulate defensive security mechanisms")
-print("- Create non-invasive persistence examples")
-print("- All activities are LOCALHOST-ONLY and CONSENSUAL")
 print("=" * 50 + "\n")
-input("Press ENTER to continue after reading this warning...")
+root = tk.Tk()
+root.withdraw()
+messagebox.showinfo("Space-meteors Game", """WARNING: EDUCATIONAL PURPOSES ONLY
+In this game you will move your spaceship to evade meteors.
+It will:
+- Check for required software
+- Simulate defensive security mechanisms
+- Create non-invasive persistence examples
+All activities are LOCALHOST-ONLY and CONSENSUAL
+Press OK to continue after reading the warning""")
 
 # Dependency Check
 try:
